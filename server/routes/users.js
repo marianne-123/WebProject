@@ -4,12 +4,12 @@ const bcrypt = require("bcryptjs");
 const mongoose = require("mongoose");
 const {body, validationResult } = require("express-validator");
 const User = require("../models/User");
+const Post = require("../models/Post");
 const jwt = require("jsonwebtoken");
 const validateToken = require("../auth/validateToken.js")
 const multer = require("multer")
 const storage = multer.memoryStorage();
 const upload = multer({storage})
-
 
 /* GET users listing. */
 router.get('/list', validateToken, (req, res, next) => {
@@ -32,7 +32,7 @@ router.post('/login',
   (req, res, next) => {
     console.log(req.body);
 
-    User.findOne({username: req.body.password}, (err, user) =>{
+    User.findOne({username: req.body.username}, (err, user) =>{
     if(err) throw err;
     if(!user) {
       return res.status(403).json({message: "Login failed :("});
@@ -44,15 +44,15 @@ router.post('/login',
             id: user._id,
             username: user.username
           }
-          console.log(process.env.SECRET)
           jwt.sign(
             jwtPayload,
-            process.env.SECRET,
+            "" + process.env.SERCRET,
             {
-              expiresIn: 120
+              expiresIn: 240
             },
             (err, token) => {
-              console.log(err)
+              console.log("Errors:" + err)
+              console.log("token: " + token)
               res.json({success: true, token});
             }
           );
@@ -69,7 +69,7 @@ router.get('/register', (req, res, next) => {
 });
 
 router.post('/register', 
-  body("username").isLength({min: 3}).trim(),
+  body("username").isLength({min: 5}).trim(),
   body("password").isLength({min: 5}),
   (req, res, next) => {
     const errors = validationResult(req);
@@ -94,7 +94,7 @@ router.post('/register',
               },
               (err, ok) => {
                 if(err) throw err;
-                return res.redirect("/users/login");
+                return res.redirect("/");
               }
             );
           });
@@ -103,6 +103,29 @@ router.post('/register',
     });
 });
 
+router.post('/newpost', (req, res, next) => {
+    new Post({
+        sender: req.body.name,
+        date: Date.now(),
+        text: req.body.text,
+        comments: []
+    }).save((err) => {
+        if(err) return next(err);
+        return res.send(req.body);
+    });
+});
+
+router.get("/posts", (req, res, next) => {
+  Post.find({}, (err, posts) => {
+      
+      if(err) return next(err);
+      if(posts) {
+        return res.json(posts);
+      } else {
+          return res.status(404).send("Not found");
+      }
+  })
+})
 
 
 module.exports = router;

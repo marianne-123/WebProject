@@ -20,6 +20,7 @@ function Login({setJwt, jwt, setUser}) {
                 console.log(data)
                 if(data.token) {
                     setJwt(data.token)
+                    // Buffer tässä ei nyt toimi 
                     setUser(JSON.parse(Buffer.from(data.token.split(".")[1], "base64").toString()))
                 }
             })
