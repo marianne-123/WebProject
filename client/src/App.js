@@ -1,5 +1,7 @@
 import {useState, useEffect} from 'react';
 // import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
+import AppBar from '@mui/material/AppBar';
+import Typography from '@mui/material/Typography';
 import Login from './components/Login'
 import Register from './components/Register'
 import Posts from './components/Posts'
@@ -18,23 +20,34 @@ function App() {
       .then(response => response.json())
       .then(json => setData(json))
 
-  }, [])
-  // tähän joku, että hakee useammin uusia postauksia. nyt hakee uudet vain kun sivu päivittyy...
-
-  /* 
-  Tämä näytetään vain kirjautuneille. Eli näin myös projektissa!
-  {jwt ? `Welcome ${user.username}!` : ""} */
-
+  }, [data]) 
+  // tähän joku, että hakee uusia postauksia.
+  // data toimii, mut sit hakee koko ajan :DDD
+ 
   return (
       <div className="App">
-        <h1>Project X</h1>
-        <h2>{jwt ? `Welcome ${user.username}!` : ""}</h2>
-        <Register />
-        {!user?.id?.length > 0 &&   // tämä testaa onko käyttäjä kirjautunut, jos joo niin ei näytetä, voi käyttää samaa ku h2
-          <Login setJwt={setJwt} setUser={setUser} jwt={jwt}/>
+        <AppBar position="static">
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            Fancy Forum
+          </Typography>
+        </AppBar>
+        <div className="content">
+          <h2>{jwt ? `Welcome ${user}!` : ""}</h2>
+          {!jwt && 
+            <div> 
+              <h2>Welcome!</h2>
+              <p>If you do not have an account, you can register here.
+                If you have already registered, you can login. 
+              </p>
+              <Register />
+              <Login setJwt={setJwt} setUser={setUser} jwt={jwt}/>
+            </div>
+            }
+          {jwt && 
+            <NewPost sender={user} />
           }
-        <NewPost />
-        <Posts posts={data}/>
+          <Posts posts={data} jwt={jwt} sender={user}/>
+        </div>
       </div>
 
   );
