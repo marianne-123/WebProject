@@ -3,6 +3,9 @@ import '../App.css';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 
+/* This component includes the register-form. 
+When user presses submit, the userdata from the form is sent to backend. */
+
 function Register() {
     const [userData, setUserData] = useState({})
 

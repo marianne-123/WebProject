@@ -2,6 +2,10 @@ import {useState} from 'react'
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 
+/* This component includes the form for writing a new comment to a post.
+It gets the id of the post and the sender as props and posts these with the comment text
+to the backend. */
+
 function NewComment({id, sender}) {
     const [textData, setTextData] = useState({id, sender})
 

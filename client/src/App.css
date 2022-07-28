@@ -29,9 +29,20 @@
   border-top: 1px double gray;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+form {
+  align-content: start;
+  margin: 5px;
+}
+
+@media (max-width: 480px) {
+  .App {
+    width: 100%;
   }
+}
+
+@media (max-width: 700px) {
+  .App {
+    width: 100%;
+  } 
 }
 

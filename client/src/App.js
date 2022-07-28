@@ -1,5 +1,4 @@
 import {useState, useEffect} from 'react';
-// import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
 import AppBar from '@mui/material/AppBar';
 import Typography from '@mui/material/Typography';
 import Login from './components/Login'
@@ -8,21 +7,24 @@ import Posts from './components/Posts'
 import './App.css';
 import NewPost from './components/NewPost';
 
+/* This is the main view of the app
+Depending on whether the user is logged in or not (if there is a jwt token or not), 
+the page shows the register/login forms 
+or a personalized welcome message and a textarea for posting new messages. 
+Posts are also visible on this page. */
 
 function App() {
   const [data, setData] = useState([])
   const [jwt, setJwt] = useState("")
   const [user, setUser] = useState({})
 
-
+/* Fetching the posts and their comments from the backend */
   useEffect(() => {
     fetch("/users/posts")
       .then(response => response.json())
       .then(json => setData(json))
 
   }, [data]) 
-  // tähän joku, että hakee uusia postauksia.
-  // data toimii, mut sit hakee koko ajan :DDD
  
   return (
       <div className="App">

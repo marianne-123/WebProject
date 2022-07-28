@@ -1,5 +1,8 @@
 import Post from './Post'
 
+/* This component shows the posts on the page. It gets the post-data as props {posts}. 
+This data is then sent one post at a time to Post-component */
+
 function Posts({posts, jwt, sender}) {
     return (
         <div>

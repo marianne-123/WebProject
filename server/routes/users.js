@@ -13,47 +13,36 @@ const upload = multer({storage})
 
 let time = new Date(Date.now());
 
-/* GET users listing. */
-router.get('/list', validateToken, (req, res, next) => {
-  User.find({}, (err, users) =>{
-    if(err) return next(err);
-    res.json(users);
-  })
-  
-});
-
-router.get('/listx', (req, res) => {
-  User.find({}, (err, users) =>{
-    console.log(users);
-  })
-  res.json({status: "ok"})
-});
-
+/* Post-route for logging in */
 router.post('/login', 
   upload.none(),
   (req, res, next) => {
     console.log(req.body);
+    /* Checking if the username can be found from the database */
     User.findOne({username: req.body.username}, (err, user) =>{
     if(err) throw err;
     if(!user) {
       return res.status(403).json({message: "Login failed :("});
     } else {
+      /* Checking if the password matches the one saved to the database */
       bcrypt.compare(req.body.password, user.password, (err, isMatch) => {
         if(err) throw err;
         if(isMatch) {
+          /* Creating a token */
           const jwtPayload = {
             id: user._id,
             username: user.username
           }
           jwt.sign(
             jwtPayload,
-            "" + process.env.SERCRET,
+            "" + process.env.SECRET,
             {
               expiresIn: 240
             },
             (err, token) => {
               console.log("Errors:" + err)
               console.log("token: " + token)
+              /* Sending a success message, token and username back to frontend */
               res.json({success: true, token, username: req.body.username});
             }
           );
@@ -69,6 +58,7 @@ router.post('/login',
 router.get('/register', (req, res, next) => {
 });
 
+/* Post-route for registering */
 router.post('/register', 
   body("username").isLength({min: 5}).trim(),
   body("password").isLength({min: 5}),
@@ -76,7 +66,7 @@ router.post('/register',
     const errors = validationResult(req);
     if(!errors.isEmpty()) {
       return res.status(400).json({errors: errors.array()});
-    }
+    } /* Checking if the username is already in use */
     User.findOne({username: req.body.username}, (err, user) => {
       if(err) {
         console.log(err);
@@ -84,10 +74,11 @@ router.post('/register',
       };
       if(user){
         return res.status(403).json({username: "Username already in use."});
-      } else {
+      } else { /* Creting a hashed password */
         bcrypt.genSalt(10, (err, salt) => {
           bcrypt.hash(req.body.password, salt, (err, hash) => {
             if(err) throw err;
+            /* Creating a new user and saving it to database */
             User.create(
               {
                 username: req.body.username,
@@ -104,6 +95,8 @@ router.post('/register',
     });
 });
 
+
+/* Post-route for posting a new message. This route saves the message to the database */
 router.post('/newpost', (req, res, next) => {
     new Post({
         sender: req.body.sender,
@@ -116,6 +109,8 @@ router.post('/newpost', (req, res, next) => {
     });
 });
 
+/* Post-route for posting a new comment. 
+First we find the correct post according to its ID number, then push the new comment to its comments-array */
 router.post('/newcomment', (req, res, next) => {
   console.log(req.body);
   Post.findOne({_id: req.body.id}, (err, post) =>{
@@ -135,6 +130,8 @@ router.post('/newcomment', (req, res, next) => {
 
 });
 
+/* Get-route to show all the posts. 
+Simply sends all the posts from database to frontend. */
 router.get("/posts", (req, res, next) => {
   Post.find({}, (err, posts) => {
       

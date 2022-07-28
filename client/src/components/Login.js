@@ -3,6 +3,11 @@ import '../App.css';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 
+/* This component includes the login-form. 
+When user presses submit, the userdata from the form is sent to backend. 
+If the user is authenticated, a token is sent as a response from the backend and set to JWT.
+Also the user itself (meaning the username) is set. */
+
 function Login({setJwt, jwt, setUser}) {
     const [userData, setUserData] = useState({})
 
@@ -23,9 +28,6 @@ function Login({setJwt, jwt, setUser}) {
                 if(data.token) {
                     setJwt(data.token)
                     setUser(data.username) 
-                    // tämä nyt oikein, mutta mitä tuolla user-muuttujassa on? millaisena menee eteenpäin?
-                    // Buffer tässä ei nyt toimi, koitetaan toista tapaa
-                    // setUser(JSON.parse(Buffer.from(data.token.split(".")[1], "base64").toString()))
                 }
             })
 
