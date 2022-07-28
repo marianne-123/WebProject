@@ -5,7 +5,8 @@ import {useState} from 'react'
 import Button from '@mui/material/Button';
 
 /* This component shows individual posts on the page. 
-It formats the post to show the sender, date and text. 
+It formats the post to show the sender, date and text.
+The post, a token and sender (the user loggeg in) are received as props. 
 Each post has a comment-button, that maps the comments and renders the Comment-component when pressed.
 If the user is logged in (meaning if there is a jwt-token), the NewComment-component is shown. */
 

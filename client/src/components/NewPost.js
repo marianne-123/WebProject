@@ -4,14 +4,14 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 
 /* This component includes the form for writing a new post. The sender is sent as a props, 
-so the application knows who is writing the comment. The sender and the text are posted to backend. */
+so the application knows who is writing the comment. The sender and the text are sent to backend with POST-call. */
 
 function NewPost({sender}) {
     const [textData, setTextData] = useState({sender})
 
     const submit = (e) => {
         e.preventDefault()
-
+        /* Posting the comment to backend */
         fetch("/users/newpost", {
             method: "POST",
             headers: {

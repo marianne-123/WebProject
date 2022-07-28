@@ -1,3 +1,5 @@
+/* This file has all the POST and GET routes used in this application */
+
 var express = require('express');
 var router = express.Router();
 const bcrypt = require("bcryptjs");
@@ -55,11 +57,9 @@ router.post('/login',
 });
 
 
-router.get('/register', (req, res, next) => {
-});
-
 /* Post-route for registering */
 router.post('/register', 
+  /* Checking if username and password are valid */
   body("username").isLength({min: 5}).trim(),
   body("password").isLength({min: 5}),
   (req, res, next) => {
@@ -96,7 +96,8 @@ router.post('/register',
 });
 
 
-/* Post-route for posting a new message. This route saves the message to the database */
+/* Post-route for posting a new message. This route saves a new message to the database
+Every message has a comment-list that is initially empty. */
 router.post('/newpost', (req, res, next) => {
     new Post({
         sender: req.body.sender,

@@ -11,8 +11,8 @@ function Register() {
 
     const submit = (e) => {
         e.preventDefault()
-        console.log("Getting here")
 
+        /* Posting the user-data to backend */
         fetch("/users/register", {
             method: "POST",
             headers: {
