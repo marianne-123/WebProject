@@ -11,6 +11,8 @@ const multer = require("multer")
 const storage = multer.memoryStorage();
 const upload = multer({storage})
 
+let time = new Date(Date.now());
+
 /* GET users listing. */
 router.get('/list', validateToken, (req, res, next) => {
   User.find({}, (err, users) =>{
@@ -31,7 +33,6 @@ router.post('/login',
   upload.none(),
   (req, res, next) => {
     console.log(req.body);
-
     User.findOne({username: req.body.username}, (err, user) =>{
     if(err) throw err;
     if(!user) {
@@ -53,7 +54,7 @@ router.post('/login',
             (err, token) => {
               console.log("Errors:" + err)
               console.log("token: " + token)
-              res.json({success: true, token});
+              res.json({success: true, token, username: req.body.username});
             }
           );
         }
@@ -105,14 +106,33 @@ router.post('/register',
 
 router.post('/newpost', (req, res, next) => {
     new Post({
-        sender: req.body.name,
-        date: Date.now(),
+        sender: req.body.sender,
+        date: time.toLocaleString('en-GB'),
         text: req.body.text,
         comments: []
     }).save((err) => {
         if(err) return next(err);
         return res.send(req.body);
     });
+});
+
+router.post('/newcomment', (req, res, next) => {
+  console.log(req.body);
+  Post.findOne({_id: req.body.id}, (err, post) =>{
+    if(err) return next(err);
+    if(post) {
+      /* Creating a comment in form "sender: comment" */
+      let newComment = req.body.sender + ": " + req.body.comment;
+      console.log(newComment)
+      post.comments.push(newComment)
+      post.save((err) => {
+        if(err) return next(err); 
+      });
+    } else {
+        return res.status(404).send("Not found");
+    }
+})
+
 });
 
 router.get("/posts", (req, res, next) => {

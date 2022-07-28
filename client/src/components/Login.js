@@ -1,11 +1,13 @@
 import {useState} from 'react'
+import '../App.css';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 
 function Login({setJwt, jwt, setUser}) {
     const [userData, setUserData] = useState({})
 
     const submit = (e) => {
         e.preventDefault()
-        console.log("Getting here")
 
         fetch("/users/login", {
             method: "POST",
@@ -20,25 +22,27 @@ function Login({setJwt, jwt, setUser}) {
                 console.log(data)
                 if(data.token) {
                     setJwt(data.token)
-                    // Buffer tässä ei nyt toimi 
-                    setUser(JSON.parse(Buffer.from(data.token.split(".")[1], "base64").toString()))
+                    setUser(data.username) 
+                    // tämä nyt oikein, mutta mitä tuolla user-muuttujassa on? millaisena menee eteenpäin?
+                    // Buffer tässä ei nyt toimi, koitetaan toista tapaa
+                    // setUser(JSON.parse(Buffer.from(data.token.split(".")[1], "base64").toString()))
                 }
             })
 
     }
 
-    /* Function for changing */
+    /* Function for changing the text fields */
     const handleChange = (e) => {
         setUserData({...userData, [e.target.name]: e.target.value})
     }
 
     return (
-        <div>
-            <h2>Login</h2>
+        <div className="form">
+            <h3>Login</h3>
             <form onSubmit={submit} onChange={handleChange}>
-                <input type="text" name="username" />
-                <input type="password" name="password" />
-                <input type="submit" />
+                <TextField type="text" id="outlined-basic" label="Username" variant="outlined" size="small" name="username" />
+                <TextField type="password" id="outlined-basic" label="Password" variant="outlined" size="small" name="password" />
+                <Button variant="contained" type="submit">Login</Button>
             </form>
         </div>
     )

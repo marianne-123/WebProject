@@ -1,15 +1,14 @@
 import {useState} from 'react'
-import '../App.css';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 
-function NewPost({sender}) {
-    const [textData, setTextData] = useState({sender})
+function NewComment({id, sender}) {
+    const [textData, setTextData] = useState({id, sender})
 
     const submit = (e) => {
         e.preventDefault()
 
-        fetch("/users/newpost", {
+        fetch("/users/newcomment", {
             method: "POST",
             headers: {
                 "Content-type": "application/json"
@@ -26,17 +25,14 @@ function NewPost({sender}) {
     const handleChange = (e) => {
         setTextData({...textData, [e.target.name]: e.target.value})
     }
-
-
     return (
         <div>
-            <h3>Write a new post</h3>
             <form onSubmit={submit} onChange={handleChange}>
-                <TextField name="text" fullWidth id="outlined-multiline-static" label="Write a new post" multiline rows={3} />
-                <Button variant="contained" type="submit">Post</Button>
+                <TextField name="comment" fullWidth id="outlined-multiline-static" label="Write a comment" multiline rows={2} />
+                <Button variant="contained" type="submit">Comment</Button>
             </form>
         </div>
     )
 }
 
-export default NewPost
+export default NewComment

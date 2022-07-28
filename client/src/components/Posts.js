@@ -1,13 +1,11 @@
 import Post from './Post'
 
-// Nyt hakee vain postauksen tekstin, eli nimi ja aika pitäisi myös saada näkyviin
-
-function Posts({posts}) {
+function Posts({posts, jwt, sender}) {
     return (
         <div>
-            <h2>Posts</h2>
+            <h3>Posts</h3>
             {posts.map((post) => (
-                <Post post={post.text} />
+                <Post key={post._id} post={post} jwt={jwt} sender={sender} />
             ))}
 
         </div>

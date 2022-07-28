@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 let userSchema = new Schema ({
     sender: {type: String},
-    date: Date,
+    date: {type: String},
     text: {type: String},
     comments: {type: [String]}
 

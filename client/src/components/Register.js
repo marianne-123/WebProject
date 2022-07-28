@@ -1,4 +1,7 @@
 import {useState} from 'react'
+import '../App.css';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 
 function Register() {
     const [userData, setUserData] = useState({})
@@ -28,12 +31,12 @@ function Register() {
     }
 
     return (
-        <div>
-            <h2>Register</h2>
+        <div className="form">
+            <h3>Register</h3>
             <form onSubmit={submit} onChange={handleChange}>
-                <input type="text" name="username" />
-                <input type="password" name="password" />
-                <input type="submit" />
+                <TextField type="text" id="outlined-basic" label="Username" variant="outlined" size="small" name="username" />
+                <TextField type="password" id="outlined-basic" label="Password" variant="outlined" size="small"  name="password" />
+                <Button variant="contained" type="submit">Register</Button>
             </form>
         </div>
     )
